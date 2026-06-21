@@ -13,6 +13,8 @@ import { ImageIcon, MessageSquareIcon, XIcon, ArrowDownIcon } from 'lucide-react
 
 import type { SessionActivity } from '../../../../hooks/useSessionProtection';
 import type { PendingPermissionRequest, PermissionMode } from '../../types/types';
+import type { QueuedMessage } from '../../hooks/useChatComposerState';
+import QueuedMessages from './QueuedMessages';
 import {
   PromptInput,
   PromptInputHeader,
@@ -57,6 +59,10 @@ interface ChatComposerProps {
   onAbortSession: () => void;
   permissionMode: PermissionMode | string;
   onModeSwitch: () => void;
+  messageQueue: QueuedMessage[];
+  onRemoveQueued: (id: string) => void;
+  onMoveQueued: (id: string, direction: 'up' | 'down') => void;
+  onEditQueued: (id: string, text: string) => void;
   tokenBudget: Record<string, unknown> | null;
   onShowTokenUsage: () => void;
   slashCommandsCount: number;
@@ -110,6 +116,10 @@ export default function ChatComposer({
   onAbortSession,
   permissionMode,
   onModeSwitch,
+  messageQueue,
+  onRemoveQueued,
+  onMoveQueued,
+  onEditQueued,
   tokenBudget,
   onShowTokenUsage,
   slashCommandsCount,
@@ -255,6 +265,12 @@ export default function ChatComposer({
                 <p className="text-sm font-medium">Drop images here</p>
               </div>
             </div>
+          )}
+
+          {messageQueue.length > 0 && (
+            <PromptInputHeader>
+              <QueuedMessages queue={messageQueue} onRemove={onRemoveQueued} onMove={onMoveQueued} onEdit={onEditQueued} />
+            </PromptInputHeader>
           )}
 
           {attachedImages.length > 0 && (

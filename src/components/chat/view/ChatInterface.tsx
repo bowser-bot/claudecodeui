@@ -182,6 +182,10 @@ function ChatInterface({
     handleTextareaInput,
     syncInputOverlayScroll,
     handleClearInput,
+    messageQueue,
+    removeQueuedMessage,
+    moveQueuedMessage,
+    editQueuedMessage,
     handleAbortSession,
     handlePermissionDecision,
     handleGrantToolPermission,
@@ -376,6 +380,10 @@ function ChatInterface({
           onAbortSession={handleAbortSession}
           permissionMode={permissionMode}
           onModeSwitch={cyclePermissionMode}
+          messageQueue={messageQueue}
+          onRemoveQueued={removeQueuedMessage}
+          onMoveQueued={moveQueuedMessage}
+          onEditQueued={editQueuedMessage}
           tokenBudget={tokenBudget}
           onShowTokenUsage={showCostModal}
           slashCommandsCount={slashCommandsCount}

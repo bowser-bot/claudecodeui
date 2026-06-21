@@ -144,6 +144,12 @@ const createFakeSubmitEvent = () => {
   return { preventDefault: () => undefined } as unknown as FormEvent<HTMLFormElement>;
 };
 
+export type QueuedMessage = {
+  id: string;
+  text: string;
+  images: File[];
+};
+
 const getNotificationSessionSummary = (
   selectedSession: ProjectSession | null,
   fallbackInput: string,
@@ -199,6 +205,40 @@ export function useChatComposerState({
     return '';
   });
   const [attachedImages, setAttachedImages] = useState<File[]>([]);
+
+  // Message queue: prompts submitted while a run is active are queued and sent
+  // one-by-one as the agent finishes (Claude-CLI-style). siteboon/claudecodeui#505, #895.
+  const [messageQueue, setMessageQueue] = useState<QueuedMessage[]>([]);
+  const queueIdRef = useRef(0);
+  const messageQueueRef = useRef<QueuedMessage[]>([]);
+  const prevIsLoadingRef = useRef(false);
+  useEffect(() => {
+    messageQueueRef.current = messageQueue;
+  }, [messageQueue]);
+
+  const removeQueuedMessage = useCallback((id: string) => {
+    setMessageQueue((queue) => queue.filter((item) => item.id !== id));
+  }, []);
+
+  const editQueuedMessage = useCallback((id: string, text: string) => {
+    setMessageQueue((queue) => queue.map((item) => (item.id === id ? { ...item, text } : item)));
+  }, []);
+
+  const moveQueuedMessage = useCallback((id: string, direction: 'up' | 'down') => {
+    setMessageQueue((queue) => {
+      const index = queue.findIndex((item) => item.id === id);
+      if (index < 0) {
+        return queue;
+      }
+      const target = direction === 'up' ? index - 1 : index + 1;
+      if (target < 0 || target >= queue.length) {
+        return queue;
+      }
+      const next = [...queue];
+      [next[index], next[target]] = [next[target], next[index]];
+      return next;
+    });
+  }, []);
   const [uploadingImages, setUploadingImages] = useState<Map<string, number>>(new Map());
   const [imageErrors, setImageErrors] = useState<Map<string, string>>(new Map());
   const [isTextareaExpanded, setIsTextareaExpanded] = useState(false);
@@ -538,7 +578,25 @@ export function useChatComposerState({
     ) => {
       event.preventDefault();
       const currentInput = inputValueRef.current;
-      if (!currentInput.trim() || isLoading || !selectedProject) {
+      if (!currentInput.trim() || !selectedProject) {
+        return;
+      }
+
+      // A run is already active: queue this prompt instead of dropping it. The
+      // drain effect sends queued prompts one-by-one as the agent goes idle.
+      if (isLoading) {
+        setMessageQueue((queue) => [
+          ...queue,
+          { id: `q${queueIdRef.current++}`, text: currentInput, images: attachedImages },
+        ]);
+        setInput('');
+        inputValueRef.current = '';
+        setAttachedImages([]);
+        resetCommandMenuState();
+        setIsTextareaExpanded(false);
+        if (textareaRef.current) {
+          textareaRef.current.style.height = 'auto';
+        }
         return;
       }
 
@@ -782,6 +840,30 @@ export function useChatComposerState({
   useEffect(() => {
     handleSubmitRef.current = handleSubmit;
   }, [handleSubmit]);
+
+  // Drain the queue one item at a time on each run-finished edge (isLoading
+  // true -> false). Reading the queue via ref keeps this effect keyed only to
+  // the loading transition, so re-queues mid-run can't double-fire a send.
+  useEffect(() => {
+    const wasLoading = prevIsLoadingRef.current;
+    prevIsLoadingRef.current = isLoading;
+    if (!(wasLoading && !isLoading)) {
+      return;
+    }
+    const queue = messageQueueRef.current;
+    if (queue.length === 0 || !selectedProject) {
+      return;
+    }
+    const [next, ...rest] = queue;
+    setMessageQueue(rest);
+    setAttachedImages(next.images);
+    setInput(next.text);
+    inputValueRef.current = next.text;
+    const timer = setTimeout(() => {
+      handleSubmitRef.current?.(createFakeSubmitEvent());
+    }, 0);
+    return () => clearTimeout(timer);
+  }, [isLoading, selectedProject, setInput]);
 
   useEffect(() => {
     inputValueRef.current = input;
@@ -1028,6 +1110,10 @@ export function useChatComposerState({
     handleTextareaInput,
     syncInputOverlayScroll,
     handleClearInput,
+    messageQueue,
+    removeQueuedMessage,
+    moveQueuedMessage,
+    editQueuedMessage,
     handleAbortSession,
     handlePermissionDecision,
     handleGrantToolPermission,
