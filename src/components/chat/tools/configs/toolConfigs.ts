@@ -577,6 +577,27 @@ export const TOOL_CONFIGS: Record<string, ToolDisplayConfig> = {
     }
   },
 
+  // Hermes execute_code: arbitrary Python run in a sandbox. Show the source as a
+  // syntax-highlighted Python block + its stdout/stderr.
+  ExecuteCode: {
+    input: {
+      type: 'collapsible',
+      title: 'Run Python',
+      defaultOpen: true,
+      contentType: 'markdown',
+      getContentProps: (input) => ({
+        content: '```python\n' + String(input?.code ?? '') + '\n```',
+      }),
+    },
+    result: {
+      type: 'collapsible',
+      defaultOpen: false,
+      title: 'Output',
+      contentType: 'text',
+      getContentProps: (result) => ({ content: String(result?.content || ''), format: 'plain' }),
+    }
+  },
+
   Default: {
     input: {
       type: 'collapsible',

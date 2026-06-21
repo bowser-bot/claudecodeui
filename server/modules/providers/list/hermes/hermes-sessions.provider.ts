@@ -56,7 +56,9 @@ export function mapHermesTool(name: string, rawArgs: unknown): { toolName: strin
   const asString = typeof args === 'string' ? args : '';
   switch (name) {
     case 'execute_code':
-      return { toolName: 'Bash', toolInput: { command: obj.code ?? obj.command ?? asString } };
+      // Hermes execute_code runs Python in a sandbox — render as a Python code
+      // block, not a shell command.
+      return { toolName: 'ExecuteCode', toolInput: { code: obj.code ?? asString } };
     case 'terminal':
     case 'bash':
     case 'shell':
