@@ -71,6 +71,8 @@ function ChatInterface({
     setClaudeModel,
     codexModel,
     setCodexModel,
+    hermesModel,
+    setHermesModel,
     geminiModel,
     setGeminiModel,
     opencodeModel,
@@ -198,6 +200,7 @@ function ChatInterface({
     cursorModel,
     claudeModel,
     codexModel,
+    hermesModel,
     geminiModel,
     opencodeModel,
     isLoading: isProcessing,
@@ -291,6 +294,8 @@ function ChatInterface({
             ? t('messageTypes.gemini')
             : provider === 'opencode'
               ? t('messageTypes.opencode', { defaultValue: 'OpenCode' })
+            : provider === 'hermes'
+              ? t('messageTypes.hermes', { defaultValue: 'Hermes' })
             : t('messageTypes.claude');
 
     return (
@@ -328,6 +333,8 @@ function ChatInterface({
           setCursorModel={setCursorModel}
           codexModel={codexModel}
           setCodexModel={setCodexModel}
+          hermesModel={hermesModel}
+          setHermesModel={setHermesModel}
           geminiModel={geminiModel}
           setGeminiModel={setGeminiModel}
           opencodeModel={opencodeModel}
@@ -422,6 +429,8 @@ function ChatInterface({
                     ? t('messageTypes.gemini')
                     : provider === 'opencode'
                       ? t('messageTypes.opencode', { defaultValue: 'OpenCode' })
+                    : provider === 'hermes'
+                      ? t('messageTypes.hermes', { defaultValue: 'Hermes' })
                     : t('messageTypes.claude'),
           })}
           isTextareaExpanded={isTextareaExpanded}

@@ -37,6 +37,7 @@ interface UseChatComposerStateArgs {
   cursorModel: string;
   claudeModel: string;
   codexModel: string;
+  hermesModel: string;
   geminiModel: string;
   opencodeModel: string;
   isLoading: boolean;
@@ -171,6 +172,7 @@ export function useChatComposerState({
   cursorModel,
   claudeModel,
   codexModel,
+  hermesModel,
   geminiModel,
   opencodeModel,
   isLoading,
@@ -334,7 +336,9 @@ export function useChatComposerState({
                 ? geminiModel
                 : provider === 'opencode'
                   ? opencodeModel
-                  : claudeModel,
+                  : provider === 'hermes'
+                    ? hermesModel
+                    : claudeModel,
           tokenUsage: tokenBudget,
         };
 
@@ -385,6 +389,7 @@ export function useChatComposerState({
     [
       claudeModel,
       codexModel,
+      hermesModel,
       currentSessionId,
       cursorModel,
       geminiModel,
@@ -711,7 +716,9 @@ export function useChatComposerState({
               ? geminiModel
               : provider === 'opencode'
                 ? opencodeModel
-                : claudeModel;
+                : provider === 'hermes'
+                  ? hermesModel
+                  : claudeModel;
 
       // One message shape for every provider. The backend resolves the
       // provider, project path, and provider-native resume id from the
@@ -751,6 +758,7 @@ export function useChatComposerState({
       attachedImages,
       claudeModel,
       codexModel,
+      hermesModel,
       currentSessionId,
       cursorModel,
       executeCommand,

@@ -24,7 +24,7 @@ export default function AgentsSettingsTab({
   const [selectedCategory, setSelectedCategory] = useState<AgentCategory>('account');
 
   const visibleAgents = useMemo<AgentProvider[]>(() => {
-    return ['claude', 'cursor', 'codex', 'gemini', 'opencode'];
+    return ['claude', 'cursor', 'codex', 'gemini', 'opencode', 'hermes'];
   }, []);
 
   const agentContextById = useMemo<Record<AgentProvider, AgentContext>>(() => ({
@@ -48,6 +48,10 @@ export default function AgentsSettingsTab({
       authStatus: providerAuthStatus.opencode,
       onLogin: () => onProviderLogin('opencode'),
     },
+    hermes: {
+      authStatus: providerAuthStatus.hermes,
+      onLogin: () => onProviderLogin('hermes'),
+    },
   }), [
     onProviderLogin,
     providerAuthStatus.claude,
@@ -55,6 +59,7 @@ export default function AgentsSettingsTab({
     providerAuthStatus.cursor,
     providerAuthStatus.gemini,
     providerAuthStatus.opencode,
+    providerAuthStatus.hermes,
   ]);
 
   return (

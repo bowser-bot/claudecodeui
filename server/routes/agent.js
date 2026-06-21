@@ -10,6 +10,7 @@ import { spawnCursor } from '../cursor-cli.js';
 import { queryCodex } from '../openai-codex.js';
 import { spawnGemini } from '../gemini-cli.js';
 import { spawnOpenCode } from '../opencode-cli.js';
+import { queryHermes } from '../hermes-gateway.js';
 import { Octokit } from '@octokit/rest';
 import { providerModelsService } from '../modules/providers/services/provider-models.service.js';
 import { IS_PLATFORM } from '../constants/config.js';
@@ -862,8 +863,8 @@ router.post('/', validateExternalApiKey, async (req, res) => {
     return res.status(400).json({ error: 'message is required' });
   }
 
-  if (!['claude', 'cursor', 'codex', 'gemini', 'opencode'].includes(provider)) {
-    return res.status(400).json({ error: 'provider must be "claude", "cursor", "codex", "gemini", or "opencode"' });
+  if (!['claude', 'cursor', 'codex', 'gemini', 'opencode', 'hermes'].includes(provider)) {
+    return res.status(400).json({ error: 'provider must be "claude", "cursor", "codex", "gemini", "opencode", or "hermes"' });
   }
 
   // Validate GitHub branch/PR creation requirements
@@ -995,6 +996,13 @@ router.post('/', validateExternalApiKey, async (req, res) => {
         cwd: finalProjectPath,
         sessionId: sessionId || null,
         model: model || opencodeModels.DEFAULT
+      }, writer);
+    } else if (provider === 'hermes') {
+      console.log('Starting Hermes gateway session');
+
+      await queryHermes(message.trim(), {
+        sessionId: sessionId || null,
+        model: model || undefined
       }, writer);
     }
 

@@ -527,6 +527,56 @@ export const TOOL_CONFIGS: Record<string, ToolDisplayConfig> = {
   // DEFAULT FALLBACK
   // ============================================================================
 
+  // ============================================================================
+  // WEB TOOLS
+  // ============================================================================
+
+  WebSearch: {
+    input: {
+      type: 'one-line',
+      label: 'Web Search',
+      getValue: (input) => input.query || '',
+      action: 'copy',
+      colorScheme: {
+        primary: 'text-blue-700 dark:text-blue-300',
+        secondary: 'text-gray-500 dark:text-gray-400',
+        background: '',
+        border: 'border-blue-400 dark:border-blue-500',
+        icon: 'text-blue-500 dark:text-blue-400'
+      }
+    },
+    result: {
+      type: 'collapsible',
+      defaultOpen: false,
+      title: 'Search results',
+      contentType: 'markdown',
+      getContentProps: (result) => ({ content: String(result?.content || '') })
+    }
+  },
+
+  WebFetch: {
+    input: {
+      type: 'one-line',
+      label: 'Web Fetch',
+      getValue: (input) => input.url || '',
+      action: 'copy',
+      colorScheme: {
+        primary: 'text-blue-700 dark:text-blue-300',
+        secondary: 'text-gray-500 dark:text-gray-400',
+        background: '',
+        border: 'border-blue-400 dark:border-blue-500',
+        icon: 'text-blue-500 dark:text-blue-400'
+      }
+    },
+    result: {
+      type: 'collapsible',
+      defaultOpen: false,
+      title: 'Fetched content',
+      contentType: 'markdown',
+      getContentProps: (result) => ({ content: String(result?.content || '') })
+    }
+  },
+
   Default: {
     input: {
       type: 'collapsible',

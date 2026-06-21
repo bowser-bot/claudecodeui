@@ -41,6 +41,10 @@ import {
     spawnOpenCode,
     abortOpenCodeSession,
 } from './opencode-cli.js';
+import {
+    queryHermes,
+    abortHermesSession,
+} from './hermes-gateway.js';
 import sessionManager from './sessionManager.js';
 import {
     stripAnsiSequences,
@@ -103,6 +107,7 @@ const wss = createWebSocketServer(server, {
             codex: queryCodex,
             gemini: spawnGemini,
             opencode: spawnOpenCode,
+            hermes: queryHermes,
         },
         abortFns: {
             claude: abortClaudeSDKSession,
@@ -110,6 +115,7 @@ const wss = createWebSocketServer(server, {
             codex: abortCodexSession,
             gemini: abortGeminiSession,
             opencode: abortOpenCodeSession,
+            hermes: abortHermesSession,
         },
         resolveToolApproval,
         getPendingApprovalsForSession,

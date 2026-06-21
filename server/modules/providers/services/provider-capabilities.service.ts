@@ -75,6 +75,17 @@ const PROVIDER_CAPABILITIES: Record<LLMProvider, ProviderCapabilities> = {
     supportsPermissionRequests: false,
     supportsTokenUsage: true,
   },
+  hermes: {
+    provider: 'hermes',
+    // Hermes executes tools server-side via its gateway; CloudCLI does not drive
+    // its permission policy, so only the default mode is exposed.
+    permissionModes: ['default'],
+    defaultPermissionMode: 'default',
+    supportsImages: false,
+    supportsAbort: true,
+    supportsPermissionRequests: false,
+    supportsTokenUsage: false,
+  },
 };
 
 /**

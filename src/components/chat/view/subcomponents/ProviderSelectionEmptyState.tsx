@@ -29,6 +29,7 @@ const PROVIDER_META: { id: LLMProvider; name: string }[] = [
   { id: "gemini", name: "Google" },
   { id: "cursor", name: "Cursor" },
   { id: "opencode", name: "OpenCode" },
+  { id: "hermes", name: "Hermes" },
 ];
 
 const MOD_KEY =
@@ -46,6 +47,8 @@ type ProviderSelectionEmptyStateProps = {
   setCursorModel: (model: string) => void;
   codexModel: string;
   setCodexModel: (model: string) => void;
+  hermesModel: string;
+  setHermesModel: (model: string) => void;
   geminiModel: string;
   setGeminiModel: (model: string) => void;
   opencodeModel: string;
@@ -79,9 +82,11 @@ function getCurrentModel(
   co: string,
   g: string,
   o: string,
+  h: string,
 ) {
   if (p === "claude") return c;
   if (p === "codex") return co;
+  if (p === "hermes") return h;
   if (p === "gemini") return g;
   if (p === "opencode") return o;
   return cu;
@@ -92,6 +97,7 @@ function getProviderDisplayName(p: LLMProvider) {
   if (p === "cursor") return "Cursor";
   if (p === "codex") return "Codex";
   if (p === "opencode") return "OpenCode";
+  if (p === "hermes") return "Hermes";
   return "Gemini";
 }
 
@@ -107,6 +113,8 @@ export default function ProviderSelectionEmptyState({
   setCursorModel,
   codexModel,
   setCodexModel,
+  hermesModel,
+  setHermesModel,
   geminiModel,
   setGeminiModel,
   opencodeModel,
@@ -140,6 +148,7 @@ export default function ProviderSelectionEmptyState({
     codexModel,
     geminiModel,
     opencodeModel,
+    hermesModel,
   );
 
   const currentModelLabel = useMemo(() => {
@@ -158,6 +167,9 @@ export default function ProviderSelectionEmptyState({
       } else if (providerId === "codex") {
         setCodexModel(modelValue);
         localStorage.setItem("codex-model", modelValue);
+      } else if (providerId === "hermes") {
+        setHermesModel(modelValue);
+        localStorage.setItem("hermes-model", modelValue);
       } else if (providerId === "gemini") {
         setGeminiModel(modelValue);
         localStorage.setItem("gemini-model", modelValue);
@@ -169,7 +181,7 @@ export default function ProviderSelectionEmptyState({
         localStorage.setItem("cursor-model", modelValue);
       }
     },
-    [setClaudeModel, setCursorModel, setCodexModel, setGeminiModel, setOpenCodeModel],
+    [setClaudeModel, setCursorModel, setCodexModel, setHermesModel, setGeminiModel, setOpenCodeModel],
   );
 
   const handleModelSelect = useCallback(
@@ -318,6 +330,10 @@ export default function ProviderSelectionEmptyState({
                 opencode: t("providerSelection.readyPrompt.opencode", {
                   model: opencodeModel,
                   defaultValue: "Ready with OpenCode {{model}}",
+                }),
+                hermes: t("providerSelection.readyPrompt.hermes", {
+                  model: hermesModel,
+                  defaultValue: "Ready with Hermes {{model}}",
                 }),
               }[provider]
             }

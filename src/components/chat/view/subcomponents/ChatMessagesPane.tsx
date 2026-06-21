@@ -33,6 +33,8 @@ interface ChatMessagesPaneProps {
   setCursorModel: (model: string) => void;
   codexModel: string;
   setCodexModel: (model: string) => void;
+  hermesModel: string;
+  setHermesModel: (model: string) => void;
   geminiModel: string;
   setGeminiModel: (model: string) => void;
   opencodeModel: string;
@@ -83,6 +85,8 @@ export default function ChatMessagesPane({
   setCursorModel,
   codexModel,
   setCodexModel,
+  hermesModel,
+  setHermesModel,
   geminiModel,
   setGeminiModel,
   opencodeModel,
@@ -170,6 +174,8 @@ export default function ChatMessagesPane({
           setCursorModel={setCursorModel}
           codexModel={codexModel}
           setCodexModel={setCodexModel}
+          hermesModel={hermesModel}
+          setHermesModel={setHermesModel}
           geminiModel={geminiModel}
           setGeminiModel={setGeminiModel}
           opencodeModel={opencodeModel}
