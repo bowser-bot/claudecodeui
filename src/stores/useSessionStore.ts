@@ -28,7 +28,8 @@ export type MessageKind =
   | 'permission_cancelled'
   | 'session_created'
   | 'interactive_prompt'
-  | 'task_notification';
+  | 'task_notification'
+  | 'user_file';
 
 export interface NormalizedMessage {
   id: string;
@@ -46,6 +47,10 @@ export interface NormalizedMessage {
   // kind-specific fields (flat for simplicity)
   role?: 'user' | 'assistant';
   content?: string;
+  // user_file: an agent-delivered downloadable file (send_user_file tool).
+  name?: string;
+  size?: number;
+  url?: string;
   /**
    * Mirrors optional transcript metadata from the server.
    *

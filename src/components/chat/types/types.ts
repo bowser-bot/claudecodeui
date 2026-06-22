@@ -40,6 +40,8 @@ export interface ChatMessage {
   isThinking?: boolean;
   isStreaming?: boolean;
   isInteractivePrompt?: boolean;
+  /** Agent-delivered downloadable file (send_user_file tool). */
+  fileAttachment?: { name: string; size: number; url: string };
   isToolUse?: boolean;
   toolName?: string;
   toolInput?: unknown;

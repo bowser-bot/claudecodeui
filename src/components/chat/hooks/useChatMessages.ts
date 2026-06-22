@@ -190,6 +190,20 @@ export function normalizedToChatMessages(messages: NormalizedMessage[]): ChatMes
         }
         break;
 
+      case 'user_file':
+        converted.push({
+          type: 'assistant',
+          content: '',
+          timestamp: msg.timestamp,
+          fileAttachment: {
+            name: msg.name || 'file',
+            size: typeof msg.size === 'number' ? msg.size : 0,
+            url: msg.url || '',
+          },
+          ...sharedMetadata,
+        });
+        break;
+
       // stream_end, complete, status, permission_*, session_created
       // are control events — not rendered as messages
       case 'stream_end':

@@ -12,7 +12,8 @@
  * - WebSocket message streaming
  */
 
-import { query } from '@anthropic-ai/claude-agent-sdk';
+import { query, createSdkMcpServer, tool } from '@anthropic-ai/claude-agent-sdk';
+import { z } from 'zod';
 import crypto from 'crypto';
 import { promises as fs } from 'fs';
 import path from 'path';
@@ -29,6 +30,40 @@ import {
 import { sessionsService } from './modules/providers/services/sessions.service.js';
 import { providerAuthService } from './modules/providers/services/provider-auth.service.js';
 import { createCompleteMessage, createNormalizedMessage } from './shared/utils.js';
+import { registerSentFile } from './sent-files.js';
+
+/**
+ * In-process MCP server exposing `send_user_file`, so the agent can deliver a
+ * file to the user as a downloadable attachment in the CloudCLI chat. The file
+ * is registered under a user-scoped token and downloaded via /api/files/sent.
+ */
+function createCloudcliMcpServer(ws, sessionId) {
+  const sendUserFile = tool(
+    'send_user_file',
+    'Deliver a file from this machine to the user as a downloadable attachment in the chat (build artifacts, exports, reports, logs, etc.). Provide an absolute path; the user can then download it from the conversation.',
+    { path: z.string().describe('Absolute path to the file to send to the user') },
+    async (args) => {
+      try {
+        const info = registerSentFile(ws?.userId ?? null, args?.path);
+        ws.send(createNormalizedMessage({
+          kind: 'user_file',
+          name: info.name,
+          size: info.size,
+          url: `/api/files/sent/${info.token}`,
+          sessionId: sessionId || null,
+          provider: 'claude',
+        }));
+        return { content: [{ type: 'text', text: `Sent "${info.name}" (${info.size} bytes) to the user as a downloadable attachment.` }] };
+      } catch (err) {
+        return {
+          content: [{ type: 'text', text: `Failed to send file: ${err?.message || String(err)}` }],
+          isError: true,
+        };
+      }
+    },
+  );
+  return createSdkMcpServer({ name: 'cloudcli', version: '1.0.0', tools: [sendUserFile] });
+}
 
 const activeSessions = new Map();
 const pendingToolApprovals = new Map();
@@ -544,6 +579,20 @@ async function queryClaudeSDK(command, options = {}, ws) {
     const mcpServers = await loadMcpConfig(options.cwd);
     if (mcpServers) {
       sdkOptions.mcpServers = mcpServers;
+    }
+
+    // Register the in-process CloudCLI tools (send_user_file) and allow them.
+    try {
+      sdkOptions.mcpServers = {
+        ...(sdkOptions.mcpServers || {}),
+        cloudcli: createCloudcliMcpServer(ws, capturedSessionId || sessionId),
+      };
+      sdkOptions.allowedTools = [
+        ...(sdkOptions.allowedTools || []),
+        'mcp__cloudcli__send_user_file',
+      ];
+    } catch (err) {
+      console.warn('[claude-sdk] failed to register cloudcli send_user_file tool:', err?.message);
     }
 
     // Handle images - save to temp files and modify prompt

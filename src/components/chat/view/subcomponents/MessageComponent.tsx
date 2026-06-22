@@ -15,6 +15,7 @@ import { Reasoning, ReasoningTrigger, ReasoningContent } from '../../../../share
 
 import { Markdown } from './Markdown';
 import MessageCopyControl from './MessageCopyControl';
+import FileAttachmentCard from './FileAttachmentCard';
 
 type DiffLine = {
   type: string;
@@ -142,6 +143,11 @@ const MessageComponent = memo(({ message, prevMessage, createDiff, onFileOpen, a
               U
             </div>
           )}
+        </div>
+      ) : message.fileAttachment ? (
+        /* Agent-delivered downloadable file (send_user_file) */
+        <div className="w-full py-1">
+          <FileAttachmentCard attachment={message.fileAttachment} />
         </div>
       ) : message.isTaskNotification ? (
         /* Compact task notification on the left */
