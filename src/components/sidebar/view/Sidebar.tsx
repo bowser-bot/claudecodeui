@@ -50,7 +50,7 @@ function Sidebar({
     'claudecodeui',
   );
   const { preferences, setPreference } = useUiPreferences();
-  const { sidebarVisible, flatConversationView } = preferences;
+  const { sidebarVisible } = preferences;
   const { setCurrentProject, mcpServerStatus } = useTaskMaster() as TaskMasterSidebarContext;
   const { tasksEnabled } = useTasksSettings();
   const paletteOps = usePaletteOps();
@@ -345,7 +345,6 @@ function Sidebar({
               void updateSessionSummary(projectId, sessionId, summary, provider as LLMProvider);
             }}
             projectListProps={projectListProps}
-            flatConversationView={flatConversationView}
             t={t}
           />
         </>

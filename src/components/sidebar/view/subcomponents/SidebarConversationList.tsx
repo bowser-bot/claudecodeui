@@ -9,7 +9,7 @@ import SidebarSessionItem from './SidebarSessionItem';
  * Flat, conversation-first sidebar body. Instead of grouping by project/folder,
  * it renders a single recency-sorted list of every loaded session across all
  * (filtered) projects, tagging each row with its owning folder as a secondary
- * label. Opt-in via the `flatConversationView` quick-setting.
+ * label. Rendered for the "Conversations" sidebar tab (the default mode).
  *
  * Reuses {@link SidebarProjectListProps} (same handlers as the grouped view) so
  * selection, rename, delete and bookmark behave identically — only the layout

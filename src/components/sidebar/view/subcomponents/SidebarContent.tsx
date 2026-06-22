@@ -163,7 +163,6 @@ type SidebarContentProps = {
   onEditingSessionNameChange: (value: string) => void;
   onSaveEditingSession: (projectId: string, sessionId: string, summary: string, provider: string) => void;
   projectListProps: SidebarProjectListProps;
-  flatConversationView: boolean;
   t: TFunction;
 };
 
@@ -215,7 +214,6 @@ export default function SidebarContent({
   onEditingSessionNameChange,
   onSaveEditingSession,
   projectListProps,
-  flatConversationView,
   t,
 }: SidebarContentProps) {
   const showConversationSearch = searchMode === 'conversations' && searchFilter.trim().length >= 2;
@@ -615,7 +613,7 @@ export default function SidebarContent({
               ))}
             </div>
           )
-        ) : flatConversationView ? (
+        ) : searchMode === 'conversations' ? (
           <SidebarConversationList {...projectListWithToggle} />
         ) : (
           <SidebarProjectList {...projectListWithToggle} />
