@@ -132,6 +132,9 @@
     "send": "Send",
     "stop": "Stop",
     "queueMessage": "Queue message",
+    "modelTooltip": "Model: {{model}} (click to change)",
+    "changeModel": "Change model",
+    "defaultModel": "default",
     "hintText": {
       "ctrlEnter": "Ctrl+Enter to send • Shift+Enter for new line • Tab to change modes • / for slash commands",
       "enter": "Enter to send • Shift+Enter for new line • Tab to change modes • / for slash commands"

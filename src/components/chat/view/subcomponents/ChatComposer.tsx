@@ -31,6 +31,7 @@ import ActivityIndicator from './ActivityIndicator';
 import ImageAttachment from './ImageAttachment';
 import PermissionRequestsBanner from './PermissionRequestsBanner';
 import TokenUsageSummary from './TokenUsageSummary';
+import SessionProviderLogo from '../../../llm-logo-provider/SessionProviderLogo';
 
 interface MentionableFile {
   name: string;
@@ -65,6 +66,9 @@ interface ChatComposerProps {
   onEditQueued: (id: string, text: string) => void;
   tokenBudget: Record<string, unknown> | null;
   onShowTokenUsage: () => void;
+  currentModel: string;
+  provider: string;
+  onShowModels: () => void;
   slashCommandsCount: number;
   onToggleCommandMenu: () => void;
   hasInput: boolean;
@@ -122,6 +126,9 @@ export default function ChatComposer({
   onEditQueued,
   tokenBudget,
   onShowTokenUsage,
+  currentModel,
+  provider,
+  onShowModels,
   slashCommandsCount,
   onToggleCommandMenu,
   hasInput,
@@ -363,6 +370,23 @@ export default function ChatComposer({
                   {permissionMode === 'plan' && t('codex.modes.plan')}
                 </span>
               </div>
+            </button>
+
+            <button
+              type="button"
+              onClick={onShowModels}
+              className="inline-flex h-8 min-w-0 max-w-[10rem] items-center gap-1.5 rounded-lg border border-border/70 bg-background/70 px-2 text-xs text-muted-foreground shadow-sm transition-colors hover:border-primary/25 hover:text-foreground sm:px-2.5"
+              title={t('input.modelTooltip', { model: currentModel || 'default', defaultValue: 'Model: {{model}} (click to change)' })}
+              aria-label={t('input.changeModel', { defaultValue: 'Change model' })}
+            >
+              <SessionProviderLogo provider={provider} className="h-3.5 w-3.5 shrink-0" />
+              <span className="truncate font-medium text-foreground">
+                {currentModel
+                  ? currentModel.includes(':')
+                    ? currentModel.slice(currentModel.indexOf(':') + 1)
+                    : currentModel
+                  : t('input.defaultModel', { defaultValue: 'default' })}
+              </span>
             </button>
 
             <TokenUsageSummary usage={tokenBudget} onClick={onShowTokenUsage} />

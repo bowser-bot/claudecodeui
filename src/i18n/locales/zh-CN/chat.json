@@ -112,6 +112,9 @@
     "send": "发送",
     "stop": "停止",
     "queueMessage": "加入队列",
+    "modelTooltip": "模型:{{model}}(点击切换)",
+    "changeModel": "切换模型",
+    "defaultModel": "默认",
     "hintText": {
       "ctrlEnter": "Ctrl+Enter 发送 • Shift+Enter 换行 • Tab 切换模式 • / 斜杠命令",
       "enter": "Enter 发送 • Shift+Enter 换行 • Tab 切换模式 • / 斜杠命令"

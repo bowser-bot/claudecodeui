@@ -457,6 +457,19 @@ export function useChatComposerState({
     );
   }, [executeCommand]);
 
+  const showModelsModal = useCallback(() => {
+    executeCommand(
+      {
+        name: '/models',
+        description: 'Browse available models for the active provider',
+        namespace: 'builtin',
+        metadata: { type: 'builtin' },
+      } as SlashCommand,
+      '/models',
+      { preserveInput: true },
+    );
+  }, [executeCommand]);
+
   const {
     slashCommands,
     slashCommandsCount,
@@ -1122,5 +1135,6 @@ export function useChatComposerState({
     commandModalPayload,
     closeCommandModal,
     showCostModal,
+    showModelsModal,
   };
 }

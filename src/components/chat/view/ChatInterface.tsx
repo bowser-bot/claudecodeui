@@ -194,6 +194,7 @@ function ChatInterface({
     commandModalPayload,
     closeCommandModal,
     showCostModal,
+    showModelsModal,
   } = useChatComposerState({
     selectedProject,
     selectedSession,
@@ -386,6 +387,21 @@ function ChatInterface({
           onEditQueued={editQueuedMessage}
           tokenBudget={tokenBudget}
           onShowTokenUsage={showCostModal}
+          currentModel={
+            provider === 'cursor'
+              ? cursorModel
+              : provider === 'codex'
+                ? codexModel
+                : provider === 'gemini'
+                  ? geminiModel
+                  : provider === 'opencode'
+                    ? opencodeModel
+                    : provider === 'hermes'
+                      ? hermesModel
+                      : claudeModel
+          }
+          provider={provider}
+          onShowModels={showModelsModal}
           slashCommandsCount={slashCommandsCount}
           onToggleCommandMenu={handleToggleCommandMenu}
           hasInput={Boolean(input.trim())}
