@@ -18,11 +18,13 @@ export async function initNative(): Promise<void> {
       import('@capacitor/app'),
     ]);
 
-    // Dark background → light status-bar icons; keep it above the web view.
+    // Embrace edge-to-edge (forced on Android 15+): the web view draws under a
+    // transparent status bar and the app's CSS safe-area padding (pwa-mode #root
+    // padding-top: env(safe-area-inset-top)) keeps content clear of it. Style.Dark
+    // = light icons for the dark UI.
     try {
-      await StatusBar.setOverlaysWebView({ overlay: false });
+      await StatusBar.setOverlaysWebView({ overlay: true });
       await StatusBar.setStyle({ style: Style.Dark });
-      await StatusBar.setBackgroundColor({ color: '#0b0b0c' });
     } catch {
       /* status bar styling is non-critical */
     }

@@ -20,8 +20,14 @@ const getIsPWA = (): boolean => {
   }
 
   const navigatorWithStandalone = window.navigator as Navigator & { standalone?: boolean };
+  // The Capacitor native shell is a standalone, app-like surface even though it
+  // doesn't report display-mode: standalone — treat it as PWA so the safe-area /
+  // mobile-standalone styling (pwa-mode) applies.
+  const capacitor = (window as unknown as { Capacitor?: { isNativePlatform?: () => boolean } }).Capacitor;
+  const isNative = Boolean(capacitor?.isNativePlatform?.());
 
   return (
+    isNative ||
     window.matchMedia('(display-mode: standalone)').matches ||
     Boolean(navigatorWithStandalone.standalone) ||
     document.referrer.includes('android-app://')
