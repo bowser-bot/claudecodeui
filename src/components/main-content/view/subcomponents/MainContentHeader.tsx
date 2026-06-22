@@ -1,4 +1,5 @@
 import { useCallback, useRef, useState, useEffect } from 'react';
+import { ArrowLeft } from 'lucide-react';
 import type { MainContentHeaderProps } from '../../types/types';
 import MobileMenuButton from './MobileMenuButton';
 import MainContentTabSwitcher from './MainContentTabSwitcher';
@@ -13,6 +14,7 @@ export default function MainContentHeader({
   shouldShowBrowserTab,
   isMobile,
   onMenuClick,
+  onBack,
 }: MainContentHeaderProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
@@ -38,7 +40,18 @@ export default function MainContentHeader({
     <div className="pwa-header-safe flex-shrink-0 border-b border-border/60 bg-background px-3 py-1.5 sm:px-4 sm:py-2">
       <div className="flex items-center justify-between gap-3">
         <div className="flex min-w-0 flex-1 items-center gap-2">
-          {isMobile && <MobileMenuButton onMenuClick={onMenuClick} />}
+          {isMobile && (onBack ? (
+            <button
+              type="button"
+              onClick={onBack}
+              aria-label="Back to conversations"
+              className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-accent hover:text-foreground active:scale-95"
+            >
+              <ArrowLeft className="h-5 w-5" />
+            </button>
+          ) : (
+            <MobileMenuButton onMenuClick={onMenuClick} />
+          ))}
           <MainContentTitle
             activeTab={activeTab}
             selectedProject={selectedProject}

@@ -47,6 +47,8 @@ export type MainContentProps = {
   sendMessage: (message: unknown) => void;
   isMobile: boolean;
   onMenuClick: () => void;
+  /** Mobile list→detail: go back to the conversation list. */
+  onBack?: () => void;
   isLoading: boolean;
   onInputFocusChange: (focused: boolean) => void;
   onSessionProcessing: MarkSessionProcessing;
@@ -68,6 +70,8 @@ export type MainContentHeaderProps = {
   shouldShowBrowserTab: boolean;
   isMobile: boolean;
   onMenuClick: () => void;
+  /** Mobile list→detail: go back to the conversation list. */
+  onBack?: () => void;
 };
 
 export type MainContentStateViewProps = {

@@ -167,6 +167,20 @@
     overflow: hidden;
   }
 
+  /* Mobile/native app: bump the root font so all rem-based type and spacing
+     scale up for comfortable phone reading. Scoped to the installed/native
+     app on small screens, so desktop and mobile-web are untouched. */
+  @media (max-width: 768px) {
+    html.pwa-mode {
+      font-size: 18px;
+    }
+    /* Message body is the most-read surface — give it a touch more. */
+    html.pwa-mode .prose {
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+  }
+
   /* Adjust fixed inset positioning in PWA mode */
   body.pwa-mode .fixed.inset-0 {
     top: var(--header-total-padding);

@@ -41,6 +41,7 @@ function MainContent({
   sendMessage,
   isMobile,
   onMenuClick,
+  onBack,
   isLoading,
   onInputFocusChange,
   onSessionProcessing,
@@ -142,6 +143,7 @@ function MainContent({
         shouldShowBrowserTab={shouldShowBrowserTab}
         isMobile={isMobile}
         onMenuClick={onMenuClick}
+        onBack={onBack}
       />
 
       <div className="flex min-h-0 flex-1 overflow-hidden">
