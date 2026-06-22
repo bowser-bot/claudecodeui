@@ -330,7 +330,7 @@ function ModelsContent({
   };
 
   return (
-    <div className="flex h-full min-h-0 flex-col gap-2.5">
+    <div className="scrollbar-thin flex h-full min-h-0 flex-col gap-2.5 overflow-y-auto">
       <div className="rounded-2xl border border-border/70 bg-muted/20 p-2.5">
         <div className="grid gap-2.5 lg:grid-cols-[minmax(0,1.55fr)_minmax(12rem,0.7fr)_minmax(15rem,0.9fr)] lg:items-start">
           <div className="min-w-0">
@@ -408,7 +408,7 @@ function ModelsContent({
         </div>
       </div>
 
-      <div className="flex min-h-0 flex-1 flex-col rounded-3xl border border-border/70 bg-muted/15 p-3 sm:p-4">
+      <div className="flex flex-col rounded-3xl border border-border/70 bg-muted/15 p-3 sm:p-4">
         <div className="mb-2.5 grid gap-2 sm:grid-cols-[1fr_auto] sm:items-center">
           <div className="min-w-0">
             <SearchField value={query} onChange={setQuery} placeholder={`Search ${providerLabel} models...`} />
@@ -419,7 +419,7 @@ function ModelsContent({
         </div>
 
         {filteredOptions.length > 0 ? (
-          <div className="scrollbar-thin min-h-0 flex-1 overflow-y-auto pr-1">
+          <div className="pr-1">
             <div className="grid gap-2 md:grid-cols-2">
               {filteredOptions.map((option, index) => {
                 const isCurrent = option.value === currentModel;
