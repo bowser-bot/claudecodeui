@@ -4,6 +4,7 @@ import {
   Eye,
   Languages,
   Maximize2,
+  MessagesSquare,
 } from 'lucide-react';
 import type { PreferenceToggleItem } from './types';
 
@@ -45,6 +46,11 @@ export const VIEW_OPTION_TOGGLES: PreferenceToggleItem[] = [
     key: 'autoScrollToBottom',
     labelKey: 'quickSettings.autoScrollToBottom',
     icon: ArrowDown,
+  },
+  {
+    key: 'flatConversationView',
+    labelKey: 'quickSettings.flatConversationView',
+    icon: MessagesSquare,
   },
 ];
 

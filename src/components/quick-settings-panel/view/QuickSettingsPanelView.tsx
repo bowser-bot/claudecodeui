@@ -27,12 +27,14 @@ export default function QuickSettingsPanelView() {
     showThinking: preferences.showThinking,
     autoScrollToBottom: preferences.autoScrollToBottom,
     sendByCtrlEnter: preferences.sendByCtrlEnter,
+    flatConversationView: preferences.flatConversationView,
   }), [
     preferences.autoExpandTools,
     preferences.autoScrollToBottom,
     preferences.sendByCtrlEnter,
     preferences.showRawParameters,
     preferences.showThinking,
+    preferences.flatConversationView,
   ]);
 
   const handlePreferenceChange = useCallback(

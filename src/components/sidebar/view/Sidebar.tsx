@@ -50,7 +50,7 @@ function Sidebar({
     'claudecodeui',
   );
   const { preferences, setPreference } = useUiPreferences();
-  const { sidebarVisible } = preferences;
+  const { sidebarVisible, flatConversationView } = preferences;
   const { setCurrentProject, mcpServerStatus } = useTaskMaster() as TaskMasterSidebarContext;
   const { tasksEnabled } = useTasksSettings();
   const paletteOps = usePaletteOps();
@@ -321,7 +321,7 @@ function Sidebar({
                   handleSessionClick(existing, project.projectId);
                 } else {
                   handleSessionClick(
-                    { id: sessionId, __provider: provider || 'claude' },
+                    { id: sessionId, __provider: (provider || 'claude') as LLMProvider },
                     project.projectId,
                   );
                 }
@@ -345,6 +345,7 @@ function Sidebar({
               void updateSessionSummary(projectId, sessionId, summary, provider as LLMProvider);
             }}
             projectListProps={projectListProps}
+            flatConversationView={flatConversationView}
             t={t}
           />
         </>

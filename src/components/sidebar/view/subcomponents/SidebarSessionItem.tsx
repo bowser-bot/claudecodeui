@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { Check, Edit2, Loader2, Pin, Trash2, X } from 'lucide-react';
+import { Check, Edit2, Folder, Loader2, Pin, Trash2, X } from 'lucide-react';
 import type { TFunction } from 'i18next';
 
 import { Badge, Button, Tooltip } from '../../../../shared/view/ui';
@@ -32,6 +32,8 @@ type SidebarSessionItemProps = {
   ) => void;
   isBookmarked: boolean;
   onToggleBookmark: (bookmark: BookmarkedSession) => void;
+  /** When set (flat conversation view), shows the owning folder as a secondary tag. */
+  projectLabel?: string;
   t: TFunction;
 };
 
@@ -80,6 +82,7 @@ export default function SidebarSessionItem({
   onDeleteSession,
   isBookmarked,
   onToggleBookmark,
+  projectLabel,
   t,
 }: SidebarSessionItemProps) {
   const sessionView = createSessionViewModel(session, currentTime, t);
@@ -186,7 +189,13 @@ export default function SidebarSessionItem({
                   <span className="ml-auto flex-shrink-0 text-[11px] text-muted-foreground">{compactSessionAge}</span>
                 )}
               </div>
-              <div className="mt-0.5 flex items-center">
+              <div className="mt-0.5 flex items-center gap-1.5">
+                {projectLabel && (
+                  <span className="flex min-w-0 items-center gap-0.5 text-[10px] text-muted-foreground">
+                    <Folder className="h-2.5 w-2.5 flex-shrink-0" />
+                    <span className="truncate">{projectLabel}</span>
+                  </span>
+                )}
                 {sessionView.messageCount > 0 && (
                   <Badge variant="secondary" className="px-1 py-0 text-xs">
                     {sessionView.messageCount}
@@ -195,7 +204,7 @@ export default function SidebarSessionItem({
               </div>
             </div>
 
-            {!sessionView.isCursorSession && (
+            {session.__provider !== 'cursor' && (
               <>
                 <button
                   className="ml-1 flex h-5 w-5 items-center justify-center rounded-md opacity-70 transition-transform active:scale-95 bg-blue-50 dark:bg-blue-900/20"
@@ -272,7 +281,13 @@ export default function SidebarSessionItem({
                   </span>
                 )}
               </div>
-              <div className="mt-0.5 flex items-center">
+              <div className="mt-0.5 flex items-center gap-1.5">
+                {projectLabel && (
+                  <span className="flex min-w-0 items-center gap-0.5 text-[10px] text-muted-foreground">
+                    <Folder className="h-2.5 w-2.5 flex-shrink-0" />
+                    <span className="truncate">{projectLabel}</span>
+                  </span>
+                )}
                 {sessionView.messageCount > 0 && <Badge variant="secondary" className="px-1 py-0 text-xs">{sessionView.messageCount}</Badge>}
               </div>
             </div>

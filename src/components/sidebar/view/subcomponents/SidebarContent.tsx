@@ -14,6 +14,7 @@ import SidebarBookmarks, { type SidebarBookmarksRef } from './SidebarBookmarks';
 import SidebarFooter from './SidebarFooter';
 import SidebarHeader from './SidebarHeader';
 import SidebarProjectList, { type SidebarProjectListProps } from './SidebarProjectList';
+import SidebarConversationList from './SidebarConversationList';
 
 function HighlightedSnippet({ snippet, highlights }: { snippet: string; highlights: { start: number; end: number }[] }) {
   const parts: ReactNode[] = [];
@@ -153,7 +154,7 @@ type SidebarContentProps = {
   isBookmarked: (sessionId: string) => boolean;
   onToggleBookmark: (bookmark: BookmarkedSession) => void;
   onRemoveBookmark: (sessionId: string) => void;
-  onSelectBookmarkedSession: (projectId: string, sessionId: string) => void;
+  onSelectBookmarkedSession: (projectId: string, sessionId: string, provider: string) => void;
   onDeleteSession: (projectId: string, sessionId: string, sessionTitle: string, provider: string) => void;
   editingSession: string | null;
   editingSessionName: string;
@@ -162,6 +163,7 @@ type SidebarContentProps = {
   onEditingSessionNameChange: (value: string) => void;
   onSaveEditingSession: (projectId: string, sessionId: string, summary: string, provider: string) => void;
   projectListProps: SidebarProjectListProps;
+  flatConversationView: boolean;
   t: TFunction;
 };
 
@@ -213,6 +215,7 @@ export default function SidebarContent({
   onEditingSessionNameChange,
   onSaveEditingSession,
   projectListProps,
+  flatConversationView,
   t,
 }: SidebarContentProps) {
   const showConversationSearch = searchMode === 'conversations' && searchFilter.trim().length >= 2;
@@ -612,6 +615,8 @@ export default function SidebarContent({
               ))}
             </div>
           )
+        ) : flatConversationView ? (
+          <SidebarConversationList {...projectListWithToggle} />
         ) : (
           <SidebarProjectList {...projectListWithToggle} />
         )}
