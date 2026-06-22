@@ -403,8 +403,23 @@ export default function ChatComposer({
               {sendByCtrlEnter ? t('input.hintText.ctrlEnter') : t('input.hintText.enter')}
             </div>
             <PromptInputSubmit
-              onClick={isLoading ? onAbortSession : undefined}
+              status={isLoading ? (input.trim() ? 'queued' : 'streaming') : 'ready'}
+              onClick={isLoading && !input.trim() ? onAbortSession : undefined}
               disabled={!isLoading && !input.trim()}
+              aria-label={
+                isLoading
+                  ? input.trim()
+                    ? t('input.queueMessage', 'Queue message')
+                    : t('input.stop', 'Stop')
+                  : t('input.send', 'Send')
+              }
+              title={
+                isLoading
+                  ? input.trim()
+                    ? t('input.queueMessage', 'Queue message')
+                    : t('input.stop', 'Stop')
+                  : t('input.send', 'Send')
+              }
               className="h-10 w-10 sm:h-10 sm:w-10"
             />
           </div>

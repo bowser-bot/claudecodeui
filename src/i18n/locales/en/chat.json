@@ -131,6 +131,7 @@
     "attachImages": "Attach images",
     "send": "Send",
     "stop": "Stop",
+    "queueMessage": "Queue message",
     "hintText": {
       "ctrlEnter": "Ctrl+Enter to send • Shift+Enter for new line • Tab to change modes • / for slash commands",
       "enter": "Enter to send • Shift+Enter for new line • Tab to change modes • / for slash commands"

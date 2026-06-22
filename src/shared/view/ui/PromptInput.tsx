@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from 'react';
-import { SendHorizonalIcon, SquareIcon } from 'lucide-react';
+import { ListPlusIcon, SendHorizonalIcon, SquareIcon } from 'lucide-react';
 
 import { cn } from '../../../lib/utils';
 import { Button } from './Button';
@@ -9,7 +9,7 @@ import Tooltip from './Tooltip';
 
 /* ─── Context ────────────────────────────────────────────────────── */
 
-type PromptInputStatus = 'ready' | 'submitted' | 'streaming' | 'error';
+type PromptInputStatus = 'ready' | 'submitted' | 'streaming' | 'error' | 'queued';
 
 interface PromptInputContextValue {
   status: PromptInputStatus;
@@ -194,19 +194,25 @@ export const PromptInputSubmit = React.forwardRef<HTMLButtonElement, PromptInput
   ({ className, status: statusProp, children, ...props }, ref) => {
     const context = React.useContext(PromptInputContext);
     const status = statusProp ?? context?.status ?? 'ready';
-    const isActive = status === 'submitted' || status === 'streaming';
+    // 'queued' = a run is active and the user has typed a follow-up: pressing
+    // it enqueues (form submit) rather than stops. Only submitted/streaming
+    // turn the button into a stop control.
+    const isStop = status === 'submitted' || status === 'streaming';
+    const isQueue = status === 'queued';
 
     return (
       <Button
         ref={ref}
-        type={isActive ? 'button' : 'submit'}
+        type={isStop ? 'button' : 'submit'}
         variant="default"
         size="icon"
         className={cn('h-8 w-8 rounded-lg', className)}
         {...props}
       >
-        {children ?? (isActive ? (
+        {children ?? (isStop ? (
           <SquareIcon className="h-3.5 w-3.5 fill-current" />
+        ) : isQueue ? (
+          <ListPlusIcon className="h-4 w-4" />
         ) : (
           <SendHorizonalIcon className="h-4 w-4" />
         ))}
