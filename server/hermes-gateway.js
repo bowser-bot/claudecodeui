@@ -19,6 +19,7 @@
 import { notifyRunFailed, notifyRunStopped } from './services/notification-orchestrator.js';
 import { sessionsService } from './modules/providers/services/sessions.service.js';
 import { providerModelsService } from './modules/providers/services/provider-models.service.js';
+import { registerSentFile } from './sent-files.js';
 import { createCompleteMessage, createNormalizedMessage } from './shared/utils.js';
 
 const DEFAULT_BASE_URL = 'http://127.0.0.1:8642';
@@ -346,6 +347,31 @@ export async function queryHermes(command, options = {}, ws) {
               breakdown: { input: Number(usage.input_tokens) || 0, output: Number(usage.output_tokens) || 0 },
             },
             sessionId: capturedSessionId,
+            provider: 'hermes',
+          }));
+        }
+        return;
+      }
+      // send_user_file: the MCP tool (mcp_cloudcli_send_user_file) just
+      // acknowledges to the agent; we deliver the file as a download card here
+      // (the runner has ws + the file registry).
+      if (name === 'tool.started' && data && typeof data.tool_name === 'string'
+          && data.tool_name.endsWith('send_user_file')) {
+        try {
+          const info = registerSentFile(ws?.userId ?? null, data.args?.path);
+          sendMessage(ws, createNormalizedMessage({
+            kind: 'user_file',
+            name: info.name,
+            size: info.size,
+            url: `/api/files/sent/${info.token}`,
+            sessionId: capturedSessionId || null,
+            provider: 'hermes',
+          }));
+        } catch (err) {
+          sendMessage(ws, createNormalizedMessage({
+            kind: 'error',
+            content: `send_user_file failed: ${err?.message || String(err)}`,
+            sessionId: capturedSessionId || null,
             provider: 'hermes',
           }));
         }
