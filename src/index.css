@@ -167,15 +167,16 @@
     overflow: hidden;
   }
 
-  /* Mobile/native app: bump the root font so all rem-based type and spacing
-     scale up for comfortable phone reading. Scoped to the installed/native
-     app on small screens, so desktop and mobile-web are untouched. */
+  /* Phone-sized viewports (browser OR installed app): bump the root font so all
+     rem-based type and spacing scale up for comfortable reading. Scoped by
+     screen width, not by app-vs-browser, so the mobile web and the native app
+     look identical. Desktop is unaffected. */
   @media (max-width: 768px) {
-    html.pwa-mode {
+    html {
       font-size: 18px;
     }
     /* Message body is the most-read surface — give it a touch more. */
-    html.pwa-mode .prose {
+    .prose {
       font-size: 1rem;
       line-height: 1.6;
     }
