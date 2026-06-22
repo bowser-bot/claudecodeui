@@ -154,8 +154,8 @@ export default function SidebarSessionItem({
       <div className="md:hidden">
         <div
           className={cn(
-            'p-2 mx-3 my-0.5 rounded-md bg-card border active:scale-[0.98] transition-all duration-150 relative',
-            isSelected ? 'bg-primary/5 border-primary/20' : '',
+            'p-2.5 mx-3 my-0.5 rounded-lg bg-card border active:scale-[0.98] transition-all duration-150 relative',
+            isSelected ? 'bg-primary/10 border-primary/40' : '',
             !isSelected && isProcessing
               ? 'border-border/60 bg-muted/20'
               : !isSelected && sessionView.isActive
@@ -176,7 +176,7 @@ export default function SidebarSessionItem({
 
             <div className="min-w-0 flex-1">
               <div className="flex items-center gap-2">
-                <div className="min-w-0 flex-1 truncate text-xs font-medium text-foreground">{sessionView.sessionName}</div>
+                <div className="min-w-0 flex-1 truncate text-sm font-medium text-foreground">{sessionView.sessionName}</div>
                 {isProcessing ? (
                   <span className="ml-auto flex-shrink-0">
                     <Tooltip content={t('tooltips.processingSessionIndicator', 'Processing session')} position="top">
@@ -186,13 +186,13 @@ export default function SidebarSessionItem({
                     </Tooltip>
                   </span>
                 ) : compactSessionAge && (
-                  <span className="ml-auto flex-shrink-0 text-[11px] text-muted-foreground">{compactSessionAge}</span>
+                  <span className="ml-auto flex-shrink-0 text-xs text-muted-foreground">{compactSessionAge}</span>
                 )}
               </div>
               <div className="mt-0.5 flex items-center gap-1.5">
                 {projectLabel && (
-                  <span className="flex min-w-0 items-center gap-0.5 text-[10px] text-muted-foreground">
-                    <Folder className="h-2.5 w-2.5 flex-shrink-0" />
+                  <span className="flex min-w-0 items-center gap-1 text-xs text-muted-foreground">
+                    <Folder className="h-3 w-3 flex-shrink-0" />
                     <span className="truncate">{projectLabel}</span>
                   </span>
                 )}
@@ -207,23 +207,23 @@ export default function SidebarSessionItem({
             {session.__provider !== 'cursor' && (
               <>
                 <button
-                  className="ml-1 flex h-5 w-5 items-center justify-center rounded-md opacity-70 transition-transform active:scale-95 bg-blue-50 dark:bg-blue-900/20"
+                  className="ml-1 flex h-8 w-8 items-center justify-center rounded-md opacity-80 transition-transform active:scale-95 bg-blue-50 dark:bg-blue-900/20"
                   onClick={(event) => {
                     event.stopPropagation();
                     requestToggleBookmark();
                   }}
                   title={isBookmarked ? t('bookmarks.unpin', 'Unpin session') : t('bookmarks.pin', 'Pin session')}
                 >
-                  <Pin className={cn('h-2.5 w-2.5', isBookmarked && 'fill-red-500 text-red-500 rotate-45', !isBookmarked && 'text-blue-600 dark:text-blue-400')} />
+                  <Pin className={cn('h-4 w-4', isBookmarked && 'fill-red-500 text-red-500 rotate-45', !isBookmarked && 'text-blue-600 dark:text-blue-400')} />
                 </button>
                 <button
-                  className="ml-1 flex h-5 w-5 items-center justify-center rounded-md bg-red-50 opacity-70 transition-transform active:scale-95 dark:bg-red-900/20"
+                  className="ml-1 flex h-8 w-8 items-center justify-center rounded-md bg-red-50 opacity-80 transition-transform active:scale-95 dark:bg-red-900/20"
                   onClick={(event) => {
                     event.stopPropagation();
                     requestDeleteSession();
                   }}
                 >
-                  <Trash2 className="h-2.5 w-2.5 text-red-600 dark:text-red-400" />
+                  <Trash2 className="h-4 w-4 text-red-600 dark:text-red-400" />
                 </button>
               </>
             )}
@@ -283,8 +283,8 @@ export default function SidebarSessionItem({
               </div>
               <div className="mt-0.5 flex items-center gap-1.5">
                 {projectLabel && (
-                  <span className="flex min-w-0 items-center gap-0.5 text-[10px] text-muted-foreground">
-                    <Folder className="h-2.5 w-2.5 flex-shrink-0" />
+                  <span className="flex min-w-0 items-center gap-1 text-xs text-muted-foreground">
+                    <Folder className="h-3 w-3 flex-shrink-0" />
                     <span className="truncate">{projectLabel}</span>
                   </span>
                 )}
