@@ -1,11 +1,12 @@
-import { IS_PLATFORM } from '../../../constants/config';
+import { IS_PLATFORM, getWsOrigin } from '../../../constants/config';
 import type { ShellIncomingMessage, ShellOutgoingMessage } from '../types/types';
 
 export function getShellWebSocketUrl(): string | null {
-  const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+  // Same-origin on web; the configured remote origin in the native app.
+  const wsOrigin = getWsOrigin();
 
   if (IS_PLATFORM) {
-    return `${protocol}//${window.location.host}/shell`;
+    return `${wsOrigin}/shell`;
   }
 
   const token = localStorage.getItem('auth-token');
@@ -14,7 +15,7 @@ export function getShellWebSocketUrl(): string | null {
     return null;
   }
 
-  return `${protocol}//${window.location.host}/shell?token=${encodeURIComponent(token)}`;
+  return `${wsOrigin}/shell?token=${encodeURIComponent(token)}`;
 }
 
 export function parseShellMessage(payload: string): ShellIncomingMessage | null {

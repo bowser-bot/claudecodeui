@@ -1,6 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { useAuth } from '../components/auth/context/AuthContext';
-import { IS_PLATFORM } from '../constants/config';
+import { IS_PLATFORM, getWsOrigin } from '../constants/config';
 
 /**
  * One frame received from the chat websocket. The server guarantees every
@@ -52,10 +52,11 @@ export const useWebSocket = () => {
 };
 
 const buildWebSocketUrl = (token: string | null) => {
-  const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-  if (IS_PLATFORM) return `${protocol}//${window.location.host}/ws`; // Platform mode: Use same domain as the page (goes through proxy)
+  // Same-origin on web; the configured remote origin in the native app.
+  const wsOrigin = getWsOrigin();
+  if (IS_PLATFORM) return `${wsOrigin}/ws`; // Platform mode: same domain as the page (goes through proxy)
   if (!token) return null;
-  return `${protocol}//${window.location.host}/ws?token=${encodeURIComponent(token)}`; // OSS mode: Use same host:port that served the page
+  return `${wsOrigin}/ws?token=${encodeURIComponent(token)}`; // OSS mode: same host:port that served the page
 };
 
 const useWebSocketProviderState = (): WebSocketContextType => {

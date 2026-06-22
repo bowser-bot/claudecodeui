@@ -1,4 +1,4 @@
-import { IS_PLATFORM } from "../constants/config";
+import { IS_PLATFORM, resolveApiUrl } from "../constants/config";
 
 // Utility function for authenticated API calls
 export const authenticatedFetch = (url, options = {}) => {
@@ -15,7 +15,7 @@ export const authenticatedFetch = (url, options = {}) => {
     defaultHeaders['Authorization'] = `Bearer ${token}`;
   }
 
-  return fetch(url, {
+  return fetch(resolveApiUrl(url), {
     ...options,
     headers: {
       ...defaultHeaders,
@@ -34,13 +34,13 @@ export const authenticatedFetch = (url, options = {}) => {
 export const api = {
   // Auth endpoints (no token required)
   auth: {
-    status: () => fetch('/api/auth/status'),
-    login: (username, password) => fetch('/api/auth/login', {
+    status: () => fetch(resolveApiUrl('/api/auth/status')),
+    login: (username, password) => fetch(resolveApiUrl('/api/auth/login'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username, password }),
     }),
-    register: (username, password) => fetch('/api/auth/register', {
+    register: (username, password) => fetch(resolveApiUrl('/api/auth/register'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username, password }),
@@ -122,7 +122,7 @@ export const api = {
     const token = localStorage.getItem('auth-token');
     const params = new URLSearchParams({ q: query, limit: String(limit) });
     if (token) params.set('token', token);
-    return `/api/providers/search/sessions?${params.toString()}`;
+    return resolveApiUrl(`/api/providers/search/sessions?${params.toString()}`);
   },
   createProject: (projectData) =>
     authenticatedFetch('/api/projects/create-project', {
