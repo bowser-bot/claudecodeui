@@ -10,6 +10,7 @@ import type {
   ProviderModelsDefinition,
   ProviderSessionActiveModelChange,
 } from '@/shared/types.js';
+import { writeProviderSessionActiveModelChange } from '@/shared/utils.js';
 
 /**
  * Hermes can route a chat to any provider+model the gateway is patched to honor
@@ -87,10 +88,13 @@ export class HermesProviderModels implements IProviderModels {
   }
 
   /**
-   * Model changes apply per-send (the runner sends provider+model on every chat
-   * request), so there's no resume-time override to persist — acknowledge it.
+   * Persist a per-session model override to the shared active-model store, the
+   * same as the other providers. An in-dialogue model change goes through the
+   * active-model endpoint (not chat.send), so the runner (queryHermes) reads it
+   * back via resolveResumeModel on the next message. (Hermes app session ids
+   * equal the gateway session id, so the store key matches the runner's id.)
    */
   async changeActiveModel(input: ProviderChangeActiveModelInput): Promise<ProviderSessionActiveModelChange> {
-    return { provider: 'hermes', sessionId: input.sessionId, supported: true, changed: true, model: input.model };
+    return writeProviderSessionActiveModelChange('hermes', input);
   }
 }

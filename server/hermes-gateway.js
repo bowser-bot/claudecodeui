@@ -18,6 +18,7 @@
 
 import { notifyRunFailed, notifyRunStopped } from './services/notification-orchestrator.js';
 import { sessionsService } from './modules/providers/services/sessions.service.js';
+import { providerModelsService } from './modules/providers/services/provider-models.service.js';
 import { createCompleteMessage, createNormalizedMessage } from './shared/utils.js';
 
 const DEFAULT_BASE_URL = 'http://127.0.0.1:8642';
@@ -259,9 +260,19 @@ async function consumeSSE(response, onEvent, signal) {
  */
 export async function queryHermes(command, options = {}, ws) {
   const { sessionId, sessionSummary, model } = options;
+  // An in-dialogue model change is persisted via the active-model endpoint
+  // (not chat.send), so prefer the stored per-session override; fall back to
+  // the per-send model. resolveResumeModel returns the requested model when no
+  // override exists or no session id is given (new session).
+  let effectiveModel = model;
+  try {
+    effectiveModel = (await providerModelsService.resolveResumeModel('hermes', sessionId, model)) || model;
+  } catch {
+    // Active-model store unavailable — fall back to the per-send model.
+  }
   // Split the `provider:model` selection so the gateway resolves the right
   // provider's credentials. Empty/plain values let the gateway use its default.
-  const { model: selModel, provider: selProvider } = parseModelValue(model);
+  const { model: selModel, provider: selProvider } = parseModelValue(effectiveModel);
   const { baseUrl, apiKey } = gatewayConfig();
 
   if (!apiKey) {
