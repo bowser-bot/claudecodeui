@@ -583,7 +583,7 @@ export const TOOL_CONFIGS: Record<string, ToolDisplayConfig> = {
     input: {
       type: 'collapsible',
       title: 'Run Python',
-      defaultOpen: true,
+      defaultOpen: false,
       contentType: 'markdown',
       getContentProps: (input) => ({
         content: '```python\n' + String(input?.code ?? '') + '\n```',
