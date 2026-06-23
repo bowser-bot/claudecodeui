@@ -54,7 +54,7 @@ export const TOOL_CONFIGS: Record<string, ToolDisplayConfig> = {
       getSecondary: (input) => input.description,
       action: 'copy',
       style: 'terminal',
-      wrapText: true,
+      wrapText: false,
       colorScheme: {
         primary: 'text-green-400 font-mono',
         secondary: 'text-gray-400',
