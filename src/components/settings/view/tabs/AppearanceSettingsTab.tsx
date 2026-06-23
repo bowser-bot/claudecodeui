@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { DarkModeToggle } from '../../../../shared/view/ui';
+import { useTheme } from '../../../../contexts/ThemeContext';
 import type { CodeEditorSettingsState, ProjectSortOrder } from '../../types/types';
 import LanguageSelector from '../../../../shared/view/ui/LanguageSelector';
 import SettingsCard from '../SettingsCard';
@@ -29,6 +30,7 @@ export default function AppearanceSettingsTab({
   onCodeEditorFontSizeChange,
 }: AppearanceSettingsTabProps) {
   const { t } = useTranslation('settings');
+  const { textSize, setTextSize } = useTheme();
 
   return (
     <div className="space-y-8">
@@ -39,6 +41,26 @@ export default function AppearanceSettingsTab({
             description={t('appearanceSettings.darkMode.description')}
           >
             <DarkModeToggle ariaLabel={t('appearanceSettings.darkMode.label')} />
+          </SettingsRow>
+        </SettingsCard>
+      </SettingsSection>
+
+      <SettingsSection title={t('appearanceSettings.textSize.label', 'Text size')}>
+        <SettingsCard>
+          <SettingsRow
+            label={t('appearanceSettings.textSize.label', 'Text size')}
+            description={t('appearanceSettings.textSize.description', 'Scale the interface text on this device. Saved per device.')}
+          >
+            <select
+              value={textSize}
+              onChange={(event) => setTextSize(event.target.value)}
+              className="w-full rounded-lg border border-input bg-card p-2.5 text-sm text-foreground touch-manipulation focus:border-primary focus:ring-1 focus:ring-primary sm:w-36"
+            >
+              <option value="small">{t('appearanceSettings.textSize.small', 'Small')}</option>
+              <option value="medium">{t('appearanceSettings.textSize.medium', 'Medium')}</option>
+              <option value="large">{t('appearanceSettings.textSize.large', 'Large')}</option>
+              <option value="xlarge">{t('appearanceSettings.textSize.xlarge', 'Extra Large')}</option>
+            </select>
           </SettingsRow>
         </SettingsCard>
       </SettingsSection>

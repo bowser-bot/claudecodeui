@@ -167,13 +167,20 @@
     overflow: hidden;
   }
 
+  /* User-adjustable text size (Settings → Appearance) scales the base font on
+     every device via --text-scale; defaults to 1 (Medium). The responsive base
+     (16px desktop / 18px touch) is multiplied by it. */
+  html {
+    font-size: calc(16px * var(--text-scale, 1));
+  }
+
   /* Phone-sized viewports (browser OR installed app): bump the root font so all
      rem-based type and spacing scale up for comfortable reading. Scoped by
      screen width, not by app-vs-browser, so the mobile web and the native app
      look identical. Desktop is unaffected. */
   @media (max-width: 768px) {
     html {
-      font-size: 18px;
+      font-size: calc(18px * var(--text-scale, 1));
     }
     /* Message body is the most-read surface — give it a touch more. */
     .prose {
@@ -188,7 +195,7 @@
      Catch any wide *touch* screen via pointer:coarse and scale it up too. */
   @media (min-width: 769px) and (pointer: coarse) {
     html {
-      font-size: 18px;
+      font-size: calc(18px * var(--text-scale, 1));
     }
     .prose {
       font-size: 1rem;

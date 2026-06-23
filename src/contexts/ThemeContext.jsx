@@ -2,6 +2,16 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const ThemeContext = createContext();
 
+// User-selectable text size → root font multiplier (consumed by --text-scale
+// in index.css). 'medium' (1.0) is the default and matches the prior behavior.
+export const TEXT_SIZE_SCALE = {
+  small: 0.9,
+  medium: 1,
+  large: 1.15,
+  xlarge: 1.3,
+};
+export const TEXT_SIZE_ORDER = ['small', 'medium', 'large', 'xlarge'];
+
 export const useTheme = () => {
   const context = useContext(ThemeContext);
   if (!context) {
@@ -26,6 +36,25 @@ export const ThemeProvider = ({ children }) => {
     
     return false;
   });
+
+  // Text size preference (per device). Defaults to 'medium'.
+  const [textSize, setTextSizeState] = useState(() => {
+    const saved = localStorage.getItem('textSize');
+    return saved && TEXT_SIZE_SCALE[saved] ? saved : 'medium';
+  });
+
+  const setTextSize = (size) => {
+    if (TEXT_SIZE_SCALE[size]) {
+      setTextSizeState(size);
+    }
+  };
+
+  // Apply the text-size preference by scaling the root font via --text-scale.
+  useEffect(() => {
+    const scale = TEXT_SIZE_SCALE[textSize] ?? 1;
+    document.documentElement.style.setProperty('--text-scale', String(scale));
+    localStorage.setItem('textSize', textSize);
+  }, [textSize]);
 
   // Update document class and localStorage when theme changes
   useEffect(() => {
@@ -84,6 +113,8 @@ export const ThemeProvider = ({ children }) => {
   const value = {
     isDarkMode,
     toggleDarkMode,
+    textSize,
+    setTextSize,
   };
 
   return (
